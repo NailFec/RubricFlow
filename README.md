@@ -2,7 +2,7 @@
 
 ## Introduction
 
-> [!IMPORTANT]
+> [!NOTE]
 > About **Rubric Flow**:
 > 
 > This web-based application enables teachers to use AI to grade students' English open-ended responses—such as translations, summaries, and essays—assigning scores and generating analytical reports for each student based on specific requirements. It is pre-configured to meet the standards of the Shanghai College Entrance Examination (Gaokao) while remaining compatible with curricula from other regions and grade levels.
