@@ -9,6 +9,8 @@ import {
   LoaderCircleIcon,
 } from "lucide-react"
 import { useState } from "react"
+import Markdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -40,43 +42,6 @@ function statusText(student: StudentResult) {
     return `${student.score} 分`
   }
   return studentStatusLabel[student.status]
-}
-
-function renderMarkdown(content: string) {
-  return content.split("\n").map((line, index) => {
-    if (line.startsWith("## ")) {
-      return (
-        <h3 key={index} className="mt-4 mb-2 text-base font-semibold">
-          {line.replace("## ", "")}
-        </h3>
-      )
-    }
-    if (line.startsWith("|")) {
-      return (
-        <p
-          key={index}
-          className="font-mono text-xs leading-relaxed text-muted-foreground"
-        >
-          {line}
-        </p>
-      )
-    }
-    if (line.match(/^\d+\./)) {
-      return (
-        <p key={index} className="ml-1 text-sm leading-relaxed">
-          {line}
-        </p>
-      )
-    }
-    if (!line.trim()) {
-      return <div key={index} className="h-2" />
-    }
-    return (
-      <p key={index} className="text-sm leading-relaxed text-foreground/90">
-        {line.replace(/\*\*(.*?)\*\*/g, "$1")}
-      </p>
-    )
-  })
 }
 
 export function StudentResultsPanel({
@@ -144,12 +109,23 @@ export function StudentResultsPanel({
         <div className="h-full overflow-y-auto">
           <div className="p-6">
             {selected?.aiReport ? (
-              <article className="max-w-prose">
-                <p className="mb-4 text-xs tracking-wide text-muted-foreground uppercase">
+              <div className="typeset typeset-docs max-w-[37em]">
+                <p className="not-typeset mb-4 text-xs tracking-wide text-muted-foreground uppercase">
                   AI 批改报告
                 </p>
-                {renderMarkdown(selected.aiReport)}
-              </article>
+                <Markdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    table: ({ children }) => (
+                      <div className="typeset-scroll">
+                        <table>{children}</table>
+                      </div>
+                    ),
+                  }}
+                >
+                  {selected.aiReport}
+                </Markdown>
+              </div>
             ) : (
               <div className="flex h-64 flex-col items-center justify-center gap-2 text-muted-foreground">
                 <LoaderCircleIcon className="size-6 animate-spin" />
